@@ -1,15 +1,16 @@
-import axios from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { api } from "../api/axios";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const { data: authUser } = useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/auth/me");
+        const res = await api.get("/api/auth/me");
         return res.data;
       } catch (error) {
         console.log(error);
@@ -21,7 +22,7 @@ const Navbar = () => {
 
   const logoutUser = async () => {
     try {
-      await axios.post("http://localhost:5001/api/auth/logout");
+      await api.post("/api/auth/logout");
 
       queryClient.setQueryData(["authUser"], null);
 
@@ -42,7 +43,7 @@ const Navbar = () => {
         {authUser ? (
           <div className="flex justify-between gap-5 items-center">
             <h2 className="font-medium text-[18px]">
-              {authUser.user?.username}
+              {authUser.user?.username || authUser.username}
             </h2>
             <button
               onClick={() => navigate("/create")}
@@ -59,8 +60,18 @@ const Navbar = () => {
           </div>
         ) : (
           <div className="flex justify-between gap-5 items-center">
-            <button onClick={() => navigate("/login")} className="cursor-pointer bg-white text-black rounded px-3 py-0.5 font-medium">Login</button>
-            <button onClick={() => navigate("/register")} className="cursor-pointer bg-white text-black rounded px-3 py-0.5 font-medium">Register</button>
+            <button
+              onClick={() => navigate("/login")}
+              className="cursor-pointer bg-white text-black rounded px-3 py-0.5 font-medium"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => navigate("/register")}
+              className="cursor-pointer bg-white text-black rounded px-3 py-0.5 font-medium"
+            >
+              Register
+            </button>
           </div>
         )}
       </div>

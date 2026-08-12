@@ -1,17 +1,18 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { api } from "../api/axios";
 
-const Login = () => {
+const CreatePost = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
   const { data: authUser } = useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/auth/me");
+        const res = await api.get("/api/auth/me");
         return res.data;
       } catch (error) {
         console.log(error);
@@ -28,7 +29,7 @@ const Login = () => {
 
   const handleCreatePost = async (values) => {
     try {
-      const currentUserId = authUser?.user?.id;
+      const currentUserId = authUser?.user?.id || authUser?.id;
 
       if (!currentUserId) {
         toast.error("You must be logged in to create a post!");
@@ -36,10 +37,7 @@ const Login = () => {
       }
       const valuesWithUserId = { ...values, userId: currentUserId };
 
-      await axios.post(
-        "http://localhost:5001/api/posts/create",
-        valuesWithUserId,
-      );
+      await api.post("/api/posts/create", valuesWithUserId);
       await queryClient.invalidateQueries({ queryKey: ["posts"] });
       toast.success("Post created successfully!");
       navigate("/");
@@ -98,4 +96,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default CreatePost;

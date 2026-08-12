@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { api } from "../api/axios";
 
 const EditPost = () => {
   const { id } = useParams();
@@ -14,7 +14,7 @@ const EditPost = () => {
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/auth/me");
+        const res = await api.get("/api/auth/me");
         return res.data;
       } catch (error) {
         console.log(error);
@@ -28,7 +28,7 @@ const EditPost = () => {
     queryKey: ["post", id],
     queryFn: async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/posts/${id}`);
+        const res = await api.get(`/api/posts/${id}`);
         return res.data.post || res.data;
       } catch (error) {
         console.log(error);
@@ -65,10 +65,7 @@ const EditPost = () => {
 
       const valuesWithUserId = { ...values, userId: currentUserId };
 
-      await axios.patch(
-        `http://localhost:5001/api/posts/${id}`,
-        valuesWithUserId,
-      );
+      await api.patch(`/api/posts/${id}`, valuesWithUserId);
 
       await queryClient.invalidateQueries({ queryKey: ["posts"] });
       await queryClient.invalidateQueries({ queryKey: ["post", id] });
@@ -87,7 +84,7 @@ const EditPost = () => {
 
   const handleDeletePost = async () => {
     try {
-      await axios.delete(`http://localhost:5001/api/posts/${id}`);
+      await api.delete(`/api/posts/${id}`);
 
       await queryClient.invalidateQueries({ queryKey: ["posts"] });
       await queryClient.invalidateQueries({ queryKey: ["post", id] });

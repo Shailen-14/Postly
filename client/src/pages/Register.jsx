@@ -1,9 +1,8 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { api } from "../api/axios";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,12 +12,10 @@ const Register = () => {
     register,
     formState: { errors },
   } = useForm();
+
   const handleRegistationData = async (values) => {
     try {
-      const res = await axios.post(
-        "http://localhost:5001/api/auth/register",
-        values,
-      );
+      const res = await api.post("/api/auth/register", values);
       console.log(res.data);
       await queryClient.invalidateQueries({ queryKey: ["authUser"] });
       navigate("/");
@@ -31,6 +28,7 @@ const Register = () => {
       toast.error(message);
     }
   };
+
   return (
     <div className="flex justify-center items-center h-150">
       <form
@@ -91,7 +89,7 @@ const Register = () => {
           </Link>
         </div>
         <button
-          type="Submit"
+          type="submit"
           className="cursor-pointer bg-black text-white rounded px-5 py-1.5 flex font-medium transition-opacity active:opacity-80"
         >
           Register

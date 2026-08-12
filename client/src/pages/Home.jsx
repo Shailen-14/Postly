@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PostCard from "../components/PostCard";
+import { api } from "../api/axios";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Home = () => {
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/auth/me");
+        const res = await api.get("/api/auth/me");
         return res.data;
       } catch (error) {
         console.log(error);
@@ -21,14 +21,11 @@ const Home = () => {
     retry: false,
   });
 
-  const {
-    data: posts,
-    isLoading,
-  } = useQuery({
+  const { data: posts, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/posts/all");
+        const res = await api.get("/api/posts/all");
         return res.data.posts;
       } catch (error) {
         console.log(error);
@@ -52,13 +49,6 @@ const Home = () => {
         const postId = post.id;
         const postOwnerId = post.userId;
         const isOwner = Boolean(currentUserId && currentUserId === postOwnerId);
-
-        console.log("Comparing IDs:", {
-          currentUserId: authUser?.id,
-          currentUserIdType: typeof authUser?.id,
-          postUserId: post.userId,
-          postUserIdType: typeof post.userId,
-        });
 
         return (
           <PostCard

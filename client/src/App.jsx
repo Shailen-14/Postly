@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer, Slide } from "react-toastify";
 import Navbar from "./components/Navbar";
 import CreatePost from "./pages/CreatePost";
-import GetPost from "./pages/GetPost";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,7 +35,6 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/post/:id/edit" element={<EditPost />} />
           <Route path="/create" element={<CreatePost />} />
-          <Route path="/post/:id" element={<GetPost />} />
         </Routes>
       </Router>
     </QueryClientProvider>

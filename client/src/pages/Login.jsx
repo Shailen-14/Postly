@@ -1,9 +1,8 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { api } from "../api/axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,12 +12,10 @@ const Login = () => {
     register,
     formState: { errors },
   } = useForm();
+
   const handleLoginData = async (values) => {
     try {
-      const res = await axios.post(
-        "http://localhost:5001/api/auth/login",
-        values,
-      );
+      const res = await api.post("/api/auth/login", values);
       console.log(res.data);
       await queryClient.invalidateQueries({ queryKey: ["authUser"] });
       navigate("/");
@@ -31,6 +28,7 @@ const Login = () => {
       toast.error(message);
     }
   };
+
   return (
     <div className="flex justify-center items-center h-150">
       <form
@@ -75,7 +73,7 @@ const Login = () => {
           </Link>
         </div>
         <button
-          type="Submit"
+          type="submit"
           className="cursor-pointer bg-black text-white rounded px-6 py-1.5 flex font-medium transition-opacity active:opacity-80"
         >
           Login
