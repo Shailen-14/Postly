@@ -9,7 +9,7 @@ export const generateTokenAndSetCookie = (res: any, id: number) => {
   const cookieOptions = {
     httpOnly: true,
     secure: env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   };
 
