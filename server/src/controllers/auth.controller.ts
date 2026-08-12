@@ -35,12 +35,12 @@ export const registerUser = async (req: Request, res: Response) => {
       if (existingUser.email === email) {
         return res
           .status(400)
-          .json({ message: "An account with that email already exists" });
+          .json({ message: "Email already registered" });
       } else if (existingUser.username === username) {
         return res.status(400).json({ message: "Username is already taken" });
       } else {
         return res.status(400).json({
-          message: "An account with that email and username already exists",
+          message: "Email already registered",
         });
       }
     }

@@ -43,6 +43,7 @@ export const createPost = async (data: NewPost) => {
 export const getAllPosts = async () => {
   return db.query.posts.findMany({
     with: { user: { columns: { password: false } } },
+    orderBy: (posts, { desc }) => [desc(posts.createdAt)],
   });
 };
 
